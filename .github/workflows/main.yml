@@ -26,8 +26,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       
+      # - name: Build and Push
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     push: true
+      #     tags: malgithub/httpapp:test
+      
+
+
+      - name: Set the tag
+        run: |
+          echo "$GITHUB_RUNNER_ID" >> $RUNNERID
       - name: Build and Push
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: malgithub/httpapp:test
+          tags: malgithub/httpapp:${{ env.RUNNERID }}
