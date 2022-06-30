@@ -14,6 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: abc
+        run: |
+          echo "IMGNAME=malgithub/httpapp:${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+
       - name: Checkout the code
         uses: actions/checkout@v3
 
@@ -25,7 +29,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      
+
+
+      - name: Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          #tags: ckliew/httpapp:test
+          tags: ${{ env.IMGNAME}}
+          build-args: |
+            IMGNAME: ${{ env.IMGNAME }}
+
+
       # - name: Build and Push
       #   uses: docker/build-push-action@v3
       #   with:
@@ -34,11 +49,11 @@ jobs:
       
 
 
-      - name: Set the tag
-        run: |
-          echo "$GITHUB_RUNNER_ID" >> $RUNNERID
-      - name: Build and Push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: malgithub/httpapp:${{ env.RUNNERID }}
+      # - name: Set the tag
+      #   run: |
+      #     echo "$GITHUB_RUNNER_ID" >> $RUNNERID
+      # - name: Build and Push
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     push: true
+      #     tags: malgithub/httpapp:${{ env.RUNNERID }}
